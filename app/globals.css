@@ -168,6 +168,18 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* In globals.css */
+@layer base {
+  :root {
+    --background-gradient: linear-gradient(
+      to bottom,
+      theme(colors.gray.400),
+      theme(colors.gray.200),
+      theme(colors.gray.600)
+    );
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -207,4 +219,25 @@
   background-size: 50px 50px;
   pointer-events: none;
   z-index: -1;
+}
+
+.grid-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent, rgba(0, 0, 0, 0.9));
+}
+
+@layer utilities {
+  .gradient {
+    background-image: var(--background-gradient);
+  }
+
+  .gradient-title {
+    background-image: var(--background-gradient);
+    @apply font-extrabold tracking-tighter text-transparent bg-clip-text pb-2;
+  }
 }
