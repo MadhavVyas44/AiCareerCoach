@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import Header from "../components/header";
 import { dark } from "@clerk/themes";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subset: ["latin"] });
 export const metadata = {
@@ -28,10 +29,11 @@ export default function RootLayout({ children }) {
           >
             <Header />
             <main className="min-h-screen">{children}</main>
+            <Toaster richColors />
 
             <footer className="bg-muted/50 py-12">
               <div className="container mx-auto px-4 text-center text-grey-200">
-                <p>Made by Madhav</p>
+                <p>Made by Madhav Vyas and Dimple Shekhawat</p>
               </div>
             </footer>
           </ThemeProvider>
