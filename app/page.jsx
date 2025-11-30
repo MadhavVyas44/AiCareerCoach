@@ -122,7 +122,7 @@ export default function Home() {
                   <CardContent className="pt-6 ">
                     <div className="flex flex-col space-y-4">
                       <div className="flex items-center space-x-4">
-                        <div className="relative h-12 w-12 flex-shrink-0">
+                        <div className="relative h-12 w-12 shrink-0">
                           <Image
                             width={40}
                             height={40}

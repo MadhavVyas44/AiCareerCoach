@@ -4,6 +4,7 @@ import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { unstable_noStore as noStore } from "next/cache";
 import { success } from "zod";
+import { generateAIInsights } from "./dashboard";
 
 export const UpdateUser = async (data) => {
   const { userId } = await auth();
@@ -26,19 +27,16 @@ export const UpdateUser = async (data) => {
         });
         //creating new industry which do not already exist in the database.
         if (!industryInsight) {
-          industryInsight = await tx.industryInsight.create({
+          const insights = await generateAIInsights(data.industry);
+
+          industryInsight = await db.industryInsight.create({
             data: {
               industry: data.industry,
-              salaryRanges: [],
-              growthRate: 0,
-              demandLevel: "MEDIUM",
-              topSkills: [],
-              marketOutlook: "NEUTRAL",
-              keyTrends: [],
-              recommendedSkills: [],
+              ...insights,
               nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             },
           });
+          return industryInsight;
         }
 
         //update the user
@@ -55,7 +53,7 @@ export const UpdateUser = async (data) => {
         });
         return { updatedUser, industryInsight };
       },
-      { timeout: 10000 }
+      { timeout: 20000 }
     );
     return { success: true, ...result };
   } catch (error) {

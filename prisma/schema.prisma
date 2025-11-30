@@ -86,7 +86,7 @@ model IndustryInsight {
   topSkills     String[]  // Most in-demand skills
   
   // Market conditions
-  marketOutlook String    // "Positive", "Neutral", "Negative"
+  marketOutlook String    // "Positive", "Neutral", "Negetive"
   keyTrends     String[]  // Array of current industry trends
   
   // Learning suggestions
