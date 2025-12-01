@@ -23,7 +23,6 @@ import useFetch from "@/hooks/use-fetch";
 import { useUser } from "@clerk/nextjs";
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { resumeSchema } from "@/app/lib/schema";
-import html2pdf from "html2pdf.js/dist/html2pdf.min.js";
 
 export default function ResumeBuilder({ initialContent }) {
   const [activeTab, setActiveTab] = useState("edit");
@@ -124,6 +123,9 @@ export default function ResumeBuilder({ initialContent }) {
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       };
 
+      // MAGIC FIX: Import the library dynamically here
+      const html2pdf = (await import("html2pdf.js")).default;
+
       await html2pdf().set(opt).from(element).save();
     } catch (error) {
       console.error("PDF generation error:", error);
@@ -170,7 +172,11 @@ export default function ResumeBuilder({ initialContent }) {
               </>
             )}
           </Button>
-          <Button onClick={generatePDF} disabled={isGenerating}>
+          <Button
+            className="cursor-pointer"
+            onClick={generatePDF}
+            disabled={isGenerating}
+          >
             {isGenerating ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -401,19 +407,24 @@ export default function ResumeBuilder({ initialContent }) {
               preview={resumeMode}
             />
           </div>
-          <div className="hidden">
-            <div id="resume-pdf">
-              <MDEditor.Markdown
-                source={previewContent}
-                style={{
-                  background: "white",
-                  color: "black",
-                }}
-              />
-            </div>
-          </div>
         </TabsContent>
       </Tabs>
+
+      <div className="hidden">
+        <div
+          id="resume-pdf"
+          className="absolute -left-[9999px] top-0 w-[210mm] min-h-[297mm] bg-white text-black p-10"
+        >
+          <MDEditor.Markdown
+            source={previewContent}
+            style={{
+              background: "white",
+              color: "black",
+              whiteSpace: "pre-wrap",
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
