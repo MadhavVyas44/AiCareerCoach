@@ -9,7 +9,7 @@ import { redirect } from "next/navigation"; // 1. Import redirect
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash", // Note: "gemini-2.5-flash" may not exist yet, defaulting to 1.5 or pro
+  model: "gemini-2.5-flash",
 });
 
 export const generateAIInsights = async (industry) => {
