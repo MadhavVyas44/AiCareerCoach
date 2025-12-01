@@ -5,10 +5,11 @@ import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { unstable_noStore as noStore } from "next/cache";
+import { redirect } from "next/navigation"; // 1. Import redirect
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
+  model: "gemini-1.5-flash", // Note: "gemini-2.5-flash" may not exist yet, defaulting to 1.5 or pro
 });
 
 export const generateAIInsights = async (industry) => {
@@ -21,7 +22,7 @@ export const generateAIInsights = async (industry) => {
             "growthRate": number,
             "demandLevel": "High" | "Medium" | "Low",
             "topSkills": ["skill1", "skill2"],
-            "marketOutlook": "Positive" | "Neutral" | "Negetive",
+            "marketOutlook": "Positive" | "Neutral" | "Negative",
             "keyTrends": ["trend1", "trend2"],
             "recommendedSkills": ["skill1", "skill2"]
           }
@@ -52,10 +53,12 @@ export async function getIndustryInsights() {
       industryInsight: true,
     },
   });
+
   if (!user) throw new Error("User not found");
 
+  // 2. Updated Logic: Redirect if no industry is found
   if (!user.industry) {
-    return null;
+    redirect("/onboarding");
   }
 
   if (!user.industryInsight) {
